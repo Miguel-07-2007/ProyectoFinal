@@ -1,54 +1,52 @@
 import java.util.Scanner;
 
 public class App {
-// Asignación de variables estáticas
+    // Asignación de variables estáticas
     static Scanner scanner = new Scanner(System.in);
-    static String[] planetas = {"Marte", "Jupiter", "Saturno"};
-    static double[] distancias= {78.0, 628.0, 1256.0};
-    static String[] naves = {"De reconocimiento", "Tripulada lenta", "Tripulada veloz"};
-    static double[] velocidades = {15_000.0, 10_000.0, 20_000.0};
-    static int   [] capacidad = {1, 4, 2};
-
+    static String[] planetas = { "Marte", "Jupiter", "Saturno" };
+    static double[] distancias = { 78.0, 628.0, 1256.0 }; // Distancia en millones de km
+    static String[] naves = { "De reconocimiento", "Tripulada lenta", "Tripulada veloz" };
+    static double[] velocidades = { 15_000.0, 10_000.0, 20_000.0 }; // Velocidades en mill de km p hora
+    static int naveSeleccionada = 0;
+    static int nuemeroPasajeros = 0;
+    static int planetaSeleccionado = 0;
     public static void main(String[] args) throws Exception {
-    getOpcion();
-    
+        getOpcion();
+        System.out.println("HASTA LA VISTA BABY");
     }
 
     private static void getOpcion() {
         int opcion;
-           mostrarMenu();
-        
-           
-            do{
-                opcion = scanner.nextInt();
+        mostrarMenu();
 
-                switch (opcion) {
-                    case 1:
-                        seleccionarPlaneta();
-                        break;
-                    case 2:
-                        seleccionarNave();
-                        break;
-                    case 3:
-                        iniciarSimulacion();
-                        break;
-                 
-                    default: System.err.println("Opción no válida");
-                        break;
+        do {
+            opcion = scanner.nextInt();
 
+            switch (opcion) {
+                case 1:
+                    int planeta =  seleccionarPlaneta();
+                    break;
+                case 2:
+                    int nave = seleccionarNave();
+                    int pasajeros =  cantidadPasajeros();
+                    double duracion = calcularDuración(planetaSeleccionado, naveSeleccionada);
+                    break;
+                case 3:
+                    iniciarSimulacion();
+                    break;
+                case 4:
+                    System.out.println("Saliendo el Juego 'INTERESPACIAL'");
+                    break;
+                default:
+                    System.err.println("Opción no válida");
+                    break;
+            }
 
-
-
-
-                }
-
-
-
-            }while(opcion != 5);
+        } while (opcion != 4);
     }
 
-    public static void mostrarMenu(){
-        System.out.println("\n1====================================");
+    public static void mostrarMenu() {
+        System.out.println("\n====================================");
         System.out.println("--------- Menú Principal ---------");
         System.out.println("1. Seleccionar un planeta de destino");
         System.out.println("2. Seleccionar una nave espacial");
@@ -56,90 +54,140 @@ public class App {
         System.out.println("4. Salir");
         System.out.println("Por favor, elige una opción: ");
         System.out.println("====================================");
-     
+
     }
 
-    public static void seleccionarPlaneta(){
+    public static int seleccionarPlaneta() {
+        int option = -1;
+        while (true) {
+            System.out.println("A continuación se encuentran los posibles destinos: ");
+            System.out.println("1. Marte");
+            System.out.println("2. Jupiter");
+            System.out.println("3. Saturno");
+            System.out.println("4. Salir");
 
-        System.out.println("A continuación se encuentran los posibles destinos: ");
-        System.out.println("1. Saturno");
-        System.out.println("2. venus");
-        System.out.println("3. marte");
-         System.out.println("4. salir");
-   
-        System.out.println("A continuación seleccione su planeta de destino: ");
-        int option = scanner.nextInt();
-        //Consumir el <ENTER>
-        scanner.nextLine();
-       switch (option) {
-            case 1:
-                System.out.printf("Planeta seleccionado: " + planetas[2] + " y la ditancia hasta su planeta es de " + distancias[2]);
-               getOpcion();
-                break;
-            case 2:
-                System.out.printf("Planeta seleccionado: " + planetas[1] + "y la ditancia hasta su planeta es de " + distancias[1]);
-                getOpcion();
-                break;
-            case 3:
-                System.out.printf("Planeta seleccionado: " + planetas[0] + "y la ditancia hasta su planeta es de " + distancias[0]);
-                getOpcion();
-                break;
-            case 4:
-                getOpcion();
+            System.out.println("A continuación seleccione su planeta de destino: ");
+            option = scanner.nextInt();
+            // Consumir el <ENTER>
+            scanner.nextLine();
 
-            default : System.err.println("Opción no válida");
-                break;
+            if (option >= 1 && option <= planetas.length) {
+                System.out.println("Su planeta de destino es " + planetas[option - 1]);
+                System.out.println(
+                        "Su distancia con el planeta elegido es de " + distancias[option - 1] + " millones de km.");
+
+                System.out.println("¿Desea confirmar su destino? (S/N)");
+                String confirmacion = scanner.nextLine().toUpperCase();// toUpperCase pasa el valor a mayúscula para
+                                                                       // evitar errores
+
+                if (confirmacion.equals("S")) {
+                    System.out.println(
+                            "Destino confirmado: " + planetas[option - 1] + " ...Regresando al menú principal...");
+                    getOpcion();
+                    break; // Termina el bucle si el usuario confirma
+                } else if (confirmacion.equals("N")) {
+                    System.out.println("Puede seleccionar otro destino.");
+                } else {
+                    System.out.println("Respuesta no válida, por favor ingrese 'S' para confirmar o 'N' para cambiar.");
+                }
+            } else if (option == 4) {
+                System.out.println("Saliendo del sistema de selección de destinos.");
+                getOpcion();
+                break; // Vuelve al menú principal
+            } else {
+                System.err.println("Opción no válida, por favor coloque un valor válido.");
             }
+        }
 
+        return option; // Devuelve el planeta seleccionado
     }
 
     public static void calcularTiempo() {
-        
+
     }
 
-    public static void seleccionarNave () {
-        System.out.println("A continuación se encuentran las posibles naves: ");
-        System.out.println("1. nave " + naves[0]);
-        System.out.println("2. nave " + naves[1]);
-        System.out.println("3. nave " + naves[2]);
+    public static int seleccionarNave() {
 
-   
-        System.out.println("A continuación seleccione su planeta de destino: ");
-        int option = scanner.nextInt();
+        int option = -1;
+        while (true) {
+            System.out.println("A continuación se encuentran las posibles naves: ");
+            System.out.println("1. nave " + naves[0]);
+            System.out.println("2. nave " + naves[1]);
+            System.out.println("3. nave " + naves[2]);
+            System.out.println("4. Salir");
 
-       switch (option) {
-            case 1:
-                System.out.printf("Nave seleccionada: " + naves[0] + ", la velocidad de su nave es de: " + velocidades[0] + " Y la capacidad de su nave es de: " + capacidad[0] + " personas");
-                break;
-            case 2:
-            System.out.printf("Nave seleccionada: " + naves[1] + ", la velocidad de su nave es de: " + velocidades[1] + " Y la capacidad de su nave es de: " + capacidad[1] + " personas");
-                break;
-            case 3:
-            System.out.printf("Nave seleccionada: " + naves[2] + ", la velocidad de su nave es de: " + velocidades[2] + " Y la capacidad de su nave es de: " + capacidad[2] + " personas");
-                break;
+            System.out.println("A continuación seleccione su nave para el viaje: ");
+            option = scanner.nextInt();
+            // Consumir el <ENTER>
+            scanner.nextLine();
 
-            default : System.err.println("Opción no válida");
-                break;
-       }
+            if (option >= 1 && option <= naves.length) {
+                System.out.println("Su nave seleccionada es " + naves[option - 1]);
+                System.out.println("La velocidad de su nave elegida es de " + velocidades[option - 1]
+                        + " millones de km por hora.");
+
+                System.out.println("¿Desea confirmar su nave? (S/N)");
+                String confirmacion = scanner.nextLine().toUpperCase();// toUpperCase pasa el valor a mayúscula para
+                                                                       // evitar errores
+
+                if (confirmacion.equals("S")) {
+                    System.out.println("Nave confirmada: " + naves[option - 1]);
+                    break; // Termina el bucle si el usuario confirma
+                } else if (confirmacion.equals("N")) {
+                    System.out.println("Puede seleccionar otra nave.");
+                } else {
+                    System.out.println("Respuesta no válida, por favor ingrese 'S' para confirmar o 'N' para cambiar.");
+                }
+            } else if (option == 4) {
+                System.out.println("Saliendo del sistema de selección de naves.");
+                getOpcion();
+                break; // Vuelve al menú principal
+            } else {
+                System.err.println("Opción no válida, por favor coloque un valor válido.");
+            }
+        }
+
+        return option; // Devuelve la nave seleccionada
     }
-
 
     public static void iniciarSimulacion() {
-        
+
     }
-    
+
     public static void validarPasajeros() {
-        
+
     }
-//Métodos auxiliares.
-public static void imprimirPlanetas(){}
 
-public static void lanzarEvento(){}
+    // Métodos auxiliares.
+    public static void imprimirPlanetas() {
+    }
 
-public static void consultarRecursos(){
-    
-}
+    public static void lanzarEvento() {
+    }
 
+    public static void consultarRecursos() {
 
+    }
 
+    public static int cantidadPasajeros() {
+        System.out.println("Ingrese la cantidad de pasajeros que van a viajar");
+        int pasajeros = scanner.nextInt();
+        if (pasajeros > 0) {
+            System.out.println("Número de pasajeros ingresado = " + pasajeros);
+
+        } else {
+            System.out.println("Número no válido, ingrese otro valor");
+            cantidadPasajeros();
+        }
+        System.out.println("Regresando al menú principal...");
+        getOpcion();
+        return pasajeros;
+    }
+
+    public static double calcularDuración(int planeta, int nave) {
+        System.out.println("la duración de su viaje será de aproximadamente: ");
+        double duracion = (distancias[planeta] / velocidades[nave]) / 24;
+        System.out.println(duracion + "dias");
+        return duracion;
+    }
 }
