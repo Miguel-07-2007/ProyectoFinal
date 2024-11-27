@@ -184,9 +184,9 @@ public class App {
         return pasajeros;
     }
 
-    public static double calcularDuración(int planeta, int nave) {
+    public static double calcularDuración(int planetaSeleccionado, int naveSeleccionada) {
         System.out.println("la duración de su viaje será de aproximadamente: ");
-        double duracion = (distancias[planeta] / velocidades[nave]) / 24;
+        double duracion = (distancias[planetaSeleccionado] / velocidades[naveSeleccionada]) / 24;
         System.out.println(duracion + "dias");
         return duracion;
     }
